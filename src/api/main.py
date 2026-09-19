@@ -441,3 +441,16 @@ def get_historical_case_replays():
             }
         ]
     }
+
+
+# Mount built frontend static assets if available (enables single-container full-stack deployment)
+from fastapi.staticfiles import StaticFiles
+
+frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend", "dist")
+if not os.path.exists(frontend_dist):
+    frontend_dist = "frontend/dist"
+
+if os.path.exists(frontend_dist):
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend-static")
+    logger.info(f"Mounted frontend static build from {frontend_dist}")
+
