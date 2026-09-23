@@ -216,6 +216,13 @@ def get_corrected_forecast(date: Optional[str] = Query(None),
     prob_preds = hrc.predict_probabilities(sub_df, nwp_col=nwp_col)
     quant_preds = qr.predict_quantiles(sub_df, nwp_col=nwp_col)
 
+    geo_elevations = {}
+    if STATE["geojson"] and "features" in STATE["geojson"]:
+        for feat in STATE["geojson"]["features"]:
+            p = feat.get("properties", {})
+            if "district_id" in p:
+                geo_elevations[p["district_id"]] = p.get("elevation_m", 100)
+
     districts_list = []
     for idx, (_, row) in enumerate(sub_df.iterrows()):
         raw_val = float(preds["raw_nwp"][idx])
@@ -230,6 +237,13 @@ def get_corrected_forecast(date: Optional[str] = Query(None),
             corr_val, float(quant_preds["p90"][idx]), p_h, p_vh
         )
 
+        elev_val = geo_elevations.get(row["district_id"])
+        if elev_val is None:
+            raw_elev = float(row.get("elevation", 100.0))
+            elev_val = round(raw_elev) if raw_elev > 1.0 else 100
+        else:
+            elev_val = round(float(elev_val))
+
         item = {
             "district_id": row["district_id"],
             "district_name": row["district_name"],
@@ -237,7 +251,7 @@ def get_corrected_forecast(date: Optional[str] = Query(None),
             "zone": row["zone"],
             "centroid_lat": row["latitude"],
             "centroid_lon": row["longitude"],
-            "elevation_m": row["elevation"],
+            "elevation_m": elev_val,
             "dominant_regime": row["regime_name"],
             "raw_nwp": round(raw_val, 2),
             "monsooniq_corrected": round(corr_val, 2),

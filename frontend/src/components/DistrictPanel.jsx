@@ -57,7 +57,7 @@ export default function DistrictPanel({
           <div className="text-xs text-slate-500 flex items-center space-x-2 mt-0.5">
             <span>Zone: <b>{zone}</b></span>
             <span>•</span>
-            <span>Elev: <b>{elevation_m}m</b></span>
+            <span>Elev: <b>{Math.round(Number(elevation_m) || 0)} m</b></span>
             <span>•</span>
             <span>Regime: <b className="text-sky-600 dark:text-sky-400">{dominant_regime}</b></span>
           </div>
@@ -82,7 +82,7 @@ export default function DistrictPanel({
           <div className="text-base font-bold text-sky-800 dark:text-sky-200 mt-0.5">
             {forecast.monsooniq_corrected} <span className="text-[10px] font-normal">mm</span>
           </div>
-          <div className="text-[10px] text-sky-600 dark:text-sky-400">
+          <div className="text-[10px] text-sky-600 dark:text-sky-400 font-mono font-medium">
             Δ {forecast.bias_delta > 0 ? `+${forecast.bias_delta}` : forecast.bias_delta} mm
           </div>
         </div>
@@ -96,28 +96,53 @@ export default function DistrictPanel({
       </div>
 
       {/* Probabilistic Uncertainty Band (P10 - P50 - P90) */}
-      <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-          <span>Forecast Uncertainty Range (P10 - P90)</span>
-          <span className="text-[11px] text-slate-500 font-normal">Quantile Regression</span>
-        </div>
-        <div className="relative pt-2 pb-1">
-          <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden flex">
-            <div
-              className="bg-sky-400 h-full rounded-full"
-              style={{
-                marginLeft: `${Math.min(100, (uncertainty_bands.p10 / 120) * 100)}%`,
-                width: `${Math.min(100, ((uncertainty_bands.p90 - uncertainty_bands.p10) / 120) * 100)}%`
-              }}
-            ></div>
+      {(() => {
+        const p10 = Number(uncertainty_bands?.p10) || 0;
+        const p50 = Number(uncertainty_bands?.p50) || 0;
+        const p90 = Number(uncertainty_bands?.p90) || 0;
+        const maxScale = Math.max(20, Math.ceil(p90 * 1.3));
+        const leftPct = Math.min(95, Math.max(0, (p10 / maxScale) * 100));
+        const rightPct = Math.min(100, Math.max(leftPct + 4, (p90 / maxScale) * 100));
+        const widthPct = Math.max(5, rightPct - leftPct);
+        const p50Pct = Math.min(98, Math.max(2, (p50 / maxScale) * 100));
+
+        return (
+          <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <span>Forecast Uncertainty Range (P10 - P90)</span>
+              <span className="text-[11px] text-slate-500 font-normal">Quantile Regression</span>
+            </div>
+
+            <div className="relative pt-3 pb-1">
+              {/* Full scale track */}
+              <div className="h-3 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden relative">
+                {/* 10th to 90th percentile shaded band */}
+                <div
+                  className="bg-gradient-to-r from-sky-400 to-indigo-500 h-full rounded-full opacity-85"
+                  style={{
+                    marginLeft: `${leftPct}%`,
+                    width: `${widthPct}%`
+                  }}
+                ></div>
+              </div>
+
+              {/* P50 Median marker pip */}
+              <div
+                className="absolute top-1.5 w-1 h-6 bg-slate-900 dark:bg-white rounded-full shadow-sm -ml-0.5 pointer-events-none"
+                style={{ left: `${p50Pct}%` }}
+                title={`Median (P50): ${p50} mm`}
+              ></div>
+
+              {/* Range labels */}
+              <div className="flex justify-between text-[11px] text-slate-600 dark:text-slate-400 mt-2 font-mono">
+                <span>P10: <b className="text-slate-800 dark:text-slate-200">{p10} mm</b></span>
+                <span className="text-sky-600 dark:text-sky-400">Median (P50): <b className="font-bold">{p50} mm</b></span>
+                <span>P90: <b className="text-slate-800 dark:text-slate-200">{p90} mm</b></span>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between text-[10.5px] text-slate-500 mt-1 font-mono">
-            <span>P10: <b>{uncertainty_bands.p10} mm</b></span>
-            <span>Median (P50): <b>{uncertainty_bands.p50} mm</b></span>
-            <span>P90: <b>{uncertainty_bands.p90} mm</b></span>
-          </div>
-        </div>
-      </div>
+        );
+      })()}
 
       {/* Extreme Heavy-Rainfall Risk Probability Gauges */}
       <div className="space-y-2">
