@@ -233,6 +233,23 @@ To switch from synthetic demonstration mode to real operational data:
 
 ---
 
+## Cloud Deployment (One-Click with Railway)
+
+MonsoonIQ is pre-configured for seamless cloud deployment on [Railway](https://railway.com/) using Docker:
+
+1. **Push repository to GitHub**: Ensure the latest code is on your GitHub repository.
+2. **Login to Railway**: Go to [railway.com](https://railway.com) and click **"New Project"**.
+3. **Deploy from GitHub repo**: Select **"Deploy from GitHub repo"** and select `MonsoonIQ-Regime-Aware-AI-Post-Processing-System`.
+4. **Automatic Build & Deploy**:
+   - Railway detects `Dockerfile` and `railway.json` automatically.
+   - It executes the multi-stage build: compiles the React SPA via Node 20 and provisions the Python 3.11 FastAPI backend.
+   - Automatically handles the dynamic `$PORT` environment variable (`uvicorn --port ${PORT:-8000}`).
+   - Automatically registers `/api/health` as the deployment health check.
+5. **Generate Public Domain**: Under your service's **Settings** -> **Networking**, click **"Generate Domain"** to get a public HTTPS URL (e.g. `https://monsooniq-production.up.railway.app`).
+
+---
+
 ## License & Attribution
-Developed for **Smart India Hackathon (SIH)**. MIT License.
+Developed for **Smart India Hackathon 2026 (SIH 2026)**. MIT License.
 Weather regime rules and verification methodologies adhere to the scientific standards of the **India Meteorological Department (IMD)** and the **World Meteorological Organization (WMO)**.
+

@@ -72,8 +72,12 @@ export default function App() {
 
       <footer className="border-t border-slate-200 dark:border-slate-800/80 mt-12 py-6 text-center text-xs text-slate-500 bg-white dark:bg-slate-900/60">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>MonsoonIQ © 2024–2026 | Smart India Hackathon Atmospheric ML Post-Processing</span>
-          <span className="font-mono text-[11px] text-slate-400">Regime Mixture of Experts • LightGBM • Isotonic Calibration</span>
+          <span className="font-medium text-slate-600 dark:text-slate-400">
+            MonsoonIQ © 2026 | Smart India Hackathon 2026 (SIH-2026) • Ministry of Earth Sciences (MoES) & India Meteorological Department
+          </span>
+          <span className="font-mono text-[11px] text-slate-500">
+            Regime Mixture of Experts (MoE) • LightGBM • Isotonic Calibrated Exceedance
+          </span>
         </div>
       </footer>
     </div>

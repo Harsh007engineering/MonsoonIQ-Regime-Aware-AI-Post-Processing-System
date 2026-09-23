@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Download, ArrowUpDown, ShieldAlert, ArrowUpRight } from 'lucide-react';
+import { Search, Download, ArrowUpDown, Filter, RefreshCw, FileSpreadsheet, Check, Compass } from 'lucide-react';
 
 export default function DistrictTable({
   districts,
@@ -7,19 +7,34 @@ export default function DistrictTable({
   onSelectDistrict
 }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedState, setSelectedState] = useState('ALL');
+  const [selectedAlert, setSelectedAlert] = useState('ALL');
   const [sortField, setSortField] = useState('monsooniq_corrected');
   const [sortAsc, setSortAsc] = useState(false);
 
+  // Unique states for filter
+  const stateOptions = useMemo(() => {
+    if (!districts) return [];
+    const set = new Set(districts.map((d) => d.state_name));
+    return Array.from(set).sort();
+  }, [districts]);
+
+  // Filtered and sorted districts
   const filteredDistricts = useMemo(() => {
     if (!districts) return [];
     let list = districts.filter((d) => {
       const q = searchTerm.toLowerCase();
-      return (
+      const matchesSearch = (
         d.district_name.toLowerCase().includes(q) ||
         d.state_name.toLowerCase().includes(q) ||
         d.zone.toLowerCase().includes(q) ||
         d.dominant_regime.toLowerCase().includes(q)
       );
+
+      const matchesState = selectedState === 'ALL' || d.state_name === selectedState;
+      const matchesAlert = selectedAlert === 'ALL' || d.alert_code === selectedAlert;
+
+      return matchesSearch && matchesState && matchesAlert;
     });
 
     list.sort((a, b) => {
@@ -32,7 +47,7 @@ export default function DistrictTable({
     });
 
     return list;
-  }, [districts, searchTerm, sortField, sortAsc]);
+  }, [districts, searchTerm, selectedState, selectedAlert, sortField, sortAsc]);
 
   const handleSort = (field) => {
     if (sortField === field) {
@@ -59,7 +74,7 @@ export default function DistrictTable({
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `MonsoonIQ_District_Forecasts.csv`);
+    link.setAttribute('download', `MonsoonIQ_National_District_Forecasts.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -67,45 +82,77 @@ export default function DistrictTable({
 
   const getAlertBadge = (code) => {
     const badges = {
-      RED: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300',
-      ORANGE: 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300',
-      YELLOW: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
-      GREEN: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
+      RED: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 border-rose-300 dark:border-rose-800',
+      ORANGE: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border-amber-300 dark:border-amber-800',
+      YELLOW: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 border-yellow-300 dark:border-yellow-800',
+      GREEN: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800',
     };
     return (
-      <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold ${badges[code] || badges.GREEN}`}>
+      <span className={`px-2 py-0.5 rounded-md text-[10.5px] font-bold border ${badges[code] || badges.GREEN}`}>
         {code}
       </span>
     );
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-md p-5 space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl p-5 sm:p-6 space-y-4">
+      {/* Table Header & Controls Bar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">
-            All India District Forecast Matrix ({filteredDistricts.length} Districts)
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base flex items-center gap-2">
+            <span>National District Meteorological Forecast Matrix</span>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono">
+              {filteredDistricts.length} / {districts?.length || 0} Districts
+            </span>
           </h3>
-          <p className="text-xs text-slate-500">Sorted by corrected precipitation and risk severity</p>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Operational 24h bias-corrected precipitation, quantile confidence intervals, and IMD early warnings
+          </p>
         </div>
 
-        <div className="flex items-center space-x-2">
-          {/* Search bar */}
+        {/* Filter Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Search Box */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
             <input
               type="text"
               placeholder="Search district, state, zone..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-sky-500 w-56"
+              className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-sky-500 w-48 sm:w-56"
             />
           </div>
 
-          {/* Export CSV button */}
+          {/* State Filter */}
+          <select
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+            className="px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-sky-500 text-slate-700 dark:text-slate-200 font-medium cursor-pointer"
+          >
+            <option value="ALL">All States ({stateOptions.length})</option>
+            {stateOptions.map((st) => (
+              <option key={st} value={st}>{st}</option>
+            ))}
+          </select>
+
+          {/* Alert Level Filter */}
+          <select
+            value={selectedAlert}
+            onChange={(e) => setSelectedAlert(e.target.value)}
+            className="px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-sky-500 text-slate-700 dark:text-slate-200 font-medium cursor-pointer"
+          >
+            <option value="ALL">All Alerts</option>
+            <option value="RED">Red Warnings</option>
+            <option value="ORANGE">Orange Alerts</option>
+            <option value="YELLOW">Yellow Watches</option>
+            <option value="GREEN">Green (Normal)</option>
+          </select>
+
+          {/* Export CSV Button */}
           <button
             onClick={exportCSV}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-all"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 dark:hover:bg-sky-900/50 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-xs font-bold transition-all shadow-sm"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export CSV</span>
@@ -113,101 +160,128 @@ export default function DistrictTable({
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto max-h-[420px] rounded-lg border border-slate-200 dark:border-slate-800">
+      {/* Enterprise Data Table */}
+      <div className="overflow-x-auto max-h-[460px] rounded-xl border border-slate-200 dark:border-slate-800">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-100 dark:bg-slate-800/80 sticky top-0 z-10 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-700">
+          <thead className="bg-slate-100 dark:bg-slate-800/90 sticky top-0 z-10 text-slate-600 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
             <tr>
-              <th className="py-2.5 px-3 cursor-pointer" onClick={() => handleSort('district_name')}>
+              <th onClick={() => handleSort('district_name')} className="py-3 px-3.5 cursor-pointer hover:text-sky-600">
                 <div className="flex items-center space-x-1">
-                  <span>District & State</span>
+                  <span>District / State</span>
                   <ArrowUpDown className="w-3 h-3 text-slate-400" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 cursor-pointer" onClick={() => handleSort('dominant_regime')}>
+              <th onClick={() => handleSort('zone')} className="py-3 px-3 cursor-pointer hover:text-sky-600 hidden md:table-cell">
                 <div className="flex items-center space-x-1">
-                  <span>Regime</span>
+                  <span>Zone</span>
                   <ArrowUpDown className="w-3 h-3 text-slate-400" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 text-right cursor-pointer" onClick={() => handleSort('raw_nwp')}>
+              <th onClick={() => handleSort('dominant_regime')} className="py-3 px-3 cursor-pointer hover:text-sky-600">
+                <div className="flex items-center space-x-1">
+                  <span>Weather Regime</span>
+                  <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                </div>
+              </th>
+              <th onClick={() => handleSort('raw_nwp')} className="py-3 px-3 text-right cursor-pointer hover:text-sky-600">
                 <div className="flex items-center justify-end space-x-1">
                   <span>Raw NWP</span>
                   <ArrowUpDown className="w-3 h-3 text-slate-400" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 text-right cursor-pointer" onClick={() => handleSort('monsooniq_corrected')}>
-                <div className="flex items-center justify-end space-x-1 text-sky-600 dark:text-sky-400">
+              <th onClick={() => handleSort('monsooniq_corrected')} className="py-3 px-3 text-right cursor-pointer hover:text-sky-600 text-sky-700 dark:text-sky-300">
+                <div className="flex items-center justify-end space-x-1">
                   <span>MonsoonIQ AI</span>
-                  <ArrowUpDown className="w-3 h-3" />
+                  <ArrowUpDown className="w-3 h-3 text-sky-500" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 text-right cursor-pointer" onClick={() => handleSort('bias_delta')}>
+              <th onClick={() => handleSort('bias_delta')} className="py-3 px-3 text-right cursor-pointer hover:text-sky-600">
                 <div className="flex items-center justify-end space-x-1">
-                  <span>Δ Delta</span>
+                  <span>Bias Δ</span>
                   <ArrowUpDown className="w-3 h-3 text-slate-400" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 text-right cursor-pointer" onClick={() => handleSort('p90')}>
-                <div className="flex items-center justify-end space-x-1">
-                  <span>P90 Max</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-400" />
-                </div>
-              </th>
-              <th className="py-2.5 px-3 text-right cursor-pointer" onClick={() => handleSort('p_heavy')}>
+              <th className="py-3 px-3 text-center hidden lg:table-cell">Uncertainty (P10 - P90)</th>
+              <th onClick={() => handleSort('p_heavy')} className="py-3 px-3 text-right cursor-pointer hover:text-sky-600 hidden sm:table-cell">
                 <div className="flex items-center justify-end space-x-1">
                   <span>P(≥64.5mm)</span>
                   <ArrowUpDown className="w-3 h-3 text-slate-400" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 text-center">IMD Alert</th>
+              <th onClick={() => handleSort('alert_code')} className="py-3 px-3.5 text-center cursor-pointer hover:text-sky-600">
+                <div className="flex items-center justify-center space-x-1">
+                  <span>Warning Status</span>
+                  <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {filteredDistricts.map((d) => {
-              const isSelected = d.district_id === selectedDistrictId;
-              return (
-                <tr
-                  key={d.district_id}
-                  onClick={() => onSelectDistrict(d.district_id)}
-                  className={`cursor-pointer transition-colors ${
-                    isSelected
-                      ? 'bg-sky-50 dark:bg-sky-950/40 font-semibold'
-                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                  }`}
-                >
-                  <td className="py-2 px-3">
-                    <div className="text-slate-900 dark:text-slate-100">{d.district_name}</div>
-                    <div className="text-[10px] text-slate-400">{d.state_name} • {d.zone}</div>
-                  </td>
-                  <td className="py-2 px-3">
-                    <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10.5px] text-slate-700 dark:text-slate-300">
-                      {d.dominant_regime}
-                    </span>
-                  </td>
-                  <td className="py-2 px-3 text-right text-slate-600 dark:text-slate-400 font-mono">
-                    {d.raw_nwp.toFixed(1)} mm
-                  </td>
-                  <td className="py-2 px-3 text-right font-mono font-bold text-sky-600 dark:text-sky-400">
-                    {d.monsooniq_corrected.toFixed(1)} mm
-                  </td>
-                  <td className={`py-2 px-3 text-right font-mono text-[11px] ${d.bias_delta > 0 ? 'text-blue-600 dark:text-blue-400' : 'text-rose-500'}`}>
-                    {d.bias_delta > 0 ? `+${d.bias_delta.toFixed(1)}` : d.bias_delta.toFixed(1)}
-                  </td>
-                  <td className="py-2 px-3 text-right font-mono text-slate-600 dark:text-slate-400">
-                    {d.p90.toFixed(1)} mm
-                  </td>
-                  <td className="py-2 px-3 text-right font-mono font-semibold">
-                    <span style={{ color: d.p_heavy > 0.4 ? '#f59e0b' : (d.p_heavy > 0.7 ? '#ef4444' : '#10b981') }}>
-                      {(d.p_heavy * 100).toFixed(0)}%
-                    </span>
-                  </td>
-                  <td className="py-2 px-3 text-center">
-                    {getAlertBadge(d.alert_code)}
-                  </td>
-                </tr>
-              );
-            })}
+            {filteredDistricts.length === 0 ? (
+              <tr>
+                <td colSpan="9" className="py-8 text-center text-slate-500 text-xs">
+                  No districts match the selected filters.
+                </td>
+              </tr>
+            ) : (
+              filteredDistricts.map((d) => {
+                const isSelected = d.district_id === selectedDistrictId;
+                return (
+                  <tr
+                    key={d.district_id}
+                    onClick={() => onSelectDistrict(d.district_id)}
+                    className={`cursor-pointer transition-colors ${
+                      isSelected
+                        ? 'bg-sky-50/90 dark:bg-sky-950/50 font-semibold'
+                        : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <td className="py-2.5 px-3.5">
+                      <div className="text-slate-900 dark:text-slate-100 font-bold">{d.district_name}</div>
+                      <div className="text-[10.5px] text-slate-400 font-normal">{d.state_name} • {Math.round(d.elevation_m || 0)}m</div>
+                    </td>
+
+                    <td className="py-2.5 px-3 text-slate-600 dark:text-slate-400 hidden md:table-cell">
+                      {d.zone}
+                    </td>
+
+                    <td className="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-300">
+                      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10.5px]">
+                        {d.dominant_regime}
+                      </span>
+                    </td>
+
+                    <td className="py-2.5 px-3 text-right font-mono text-slate-600 dark:text-slate-400">
+                      {d.raw_nwp.toFixed(2)} mm
+                    </td>
+
+                    <td className="py-2.5 px-3 text-right font-mono font-bold text-sky-600 dark:text-sky-400">
+                      {d.monsooniq_corrected.toFixed(2)} mm
+                    </td>
+
+                    <td className="py-2.5 px-3 text-right font-mono text-[11px]">
+                      <span className={d.bias_delta > 0 ? 'text-sky-600 dark:text-sky-400' : d.bias_delta < 0 ? 'text-rose-500' : 'text-slate-400'}>
+                        {d.bias_delta > 0 ? `+${d.bias_delta.toFixed(2)}` : d.bias_delta.toFixed(2)}
+                      </span>
+                    </td>
+
+                    <td className="py-2.5 px-3 text-center font-mono text-[10.5px] text-slate-500 hidden lg:table-cell">
+                      {d.p10} - {d.p90} mm
+                    </td>
+
+                    <td className="py-2.5 px-3 text-right font-mono hidden sm:table-cell">
+                      <span className={d.p_heavy >= 0.5 ? 'font-bold text-rose-600 dark:text-rose-400' : 'text-slate-600 dark:text-slate-400'}>
+                        {(d.p_heavy * 100).toFixed(0)}%
+                      </span>
+                    </td>
+
+                    <td className="py-2.5 px-3.5 text-center">
+                      {getAlertBadge(d.alert_code)}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

@@ -6,14 +6,26 @@ export default function AboutPage() {
     <div className="max-w-5xl mx-auto space-y-6 pb-12 text-slate-800 dark:text-slate-200">
       {/* Title */}
       <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
-        <div className="flex items-center space-x-2">
-          <Info className="w-5 h-5 text-sky-600" />
-          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-            MonsoonIQ: Scientific Architecture & Methodology
-          </h1>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-lg bg-sky-100 dark:bg-sky-950 flex items-center justify-center text-sky-700 dark:text-sky-400">
+              <Info className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                MonsoonIQ: Scientific Architecture & Methodology
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
+                भारत सरकार • Ministry of Earth Sciences (MoES) & India Meteorological Department (IMD)
+              </p>
+            </div>
+          </div>
+          <span className="px-3 py-1 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-300 text-xs font-bold border border-sky-200 dark:border-sky-800 self-start sm:self-auto">
+            SIH 2026 Finalist Prototype
+          </span>
         </div>
-        <p className="text-xs text-slate-500">
-          Smart India Hackathon Technical Briefing for Judges & Operational Meteorologists.
+        <p className="text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+          Smart India Hackathon 2026 Technical Briefing for Jury Members, Domain Experts & Operational Numerical Weather Prediction Teams.
         </p>
       </div>
 
