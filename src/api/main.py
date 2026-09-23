@@ -14,7 +14,7 @@ import os
 import json
 import logging
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, Query, Response
+from fastapi import FastAPI, APIRouter, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 import pandas as pd
@@ -39,6 +39,8 @@ app = FastAPI(
     description="Regime-Aware AI Post-Processing System for Monsoon Rainfall Forecasts over India",
     version="1.0.0"
 )
+
+api_router = APIRouter()
 
 # Enable CORS for frontend integration
 app.add_middleware(
@@ -106,7 +108,7 @@ def load_artifacts():
         logger.error(f"Error during model startup load: {e}")
 
 
-@app.get("/health", response_model=HealthResponse)
+@api_router.get("/health", response_model=HealthResponse)
 def health():
     """Health check endpoint."""
     return HealthResponse(
@@ -118,7 +120,7 @@ def health():
     )
 
 
-@app.get("/districts")
+@api_router.get("/districts")
 def list_districts():
     """Return all districts with metadata and coordinates."""
     if not STATE["geojson"]:
@@ -138,7 +140,7 @@ def list_districts():
     return {"total": len(districts), "districts": districts}
 
 
-@app.get("/districts/geojson")
+@api_router.get("/districts/geojson")
 def get_districts_geojson():
     """Return complete GeoJSON for district polygons."""
     if not STATE["geojson"]:
@@ -146,7 +148,7 @@ def get_districts_geojson():
     return STATE["geojson"]
 
 
-@app.get("/regime")
+@api_router.get("/regime")
 def get_regime_for_date(date: Optional[str] = Query(None, description="Date in YYYY-MM-DD")):
     """Get spatial regime probabilities and dominant regime for a date."""
     df = STATE["df_districts"]
@@ -176,7 +178,7 @@ def get_regime_for_date(date: Optional[str] = Query(None, description="Date in Y
     }
 
 
-@app.get("/forecast/corrected")
+@api_router.get("/forecast/corrected")
 def get_corrected_forecast(date: Optional[str] = Query(None),
                            lead_time_days: int = Query(1, ge=1, le=5),
                            mode: str = Query("district", pattern="^(district|grid)$")):
@@ -264,7 +266,7 @@ def get_corrected_forecast(date: Optional[str] = Query(None),
     return resp
 
 
-@app.get("/forecast/heavy-probability")
+@api_router.get("/forecast/heavy-probability")
 def get_heavy_probabilities(date: Optional[str] = Query(None),
                             lead_time_days: int = Query(1, ge=1, le=5)):
     """Calibrated probability of exceeding IMD heavy rainfall thresholds."""
@@ -287,7 +289,7 @@ def get_heavy_probabilities(date: Optional[str] = Query(None),
     }
 
 
-@app.get("/district/{district_id}")
+@api_router.get("/district/{district_id}")
 def get_district_detail(district_id: str,
                         date: Optional[str] = Query(None),
                         lead_time_days: int = Query(1, ge=1, le=5)):
@@ -349,7 +351,7 @@ def get_district_detail(district_id: str,
     }
 
 
-@app.get("/explain/{district_id}/{date}")
+@api_router.get("/explain/{district_id}/{date}")
 def explain_forecast(district_id: str, date: str):
     """SHAP feature attribution explaining why MonsoonIQ corrected the forecast."""
     df = STATE["df_districts"]
@@ -371,7 +373,14 @@ def explain_forecast(district_id: str, date: str):
     return explanation
 
 
-@app.get("/verification/summary")
+@api_router.get("/explain/{district_id}")
+def explain_forecast_query(district_id: str, date: Optional[str] = Query(None)):
+    """SHAP feature attribution alias accepting date as query parameter."""
+    target_date = date or "2023-07-15"
+    return explain_forecast(district_id=district_id, date=target_date)
+
+
+@api_router.get("/verification/summary")
 def get_verification_summary():
     """Retrieve full verification summary comparing all 4 benchmark systems."""
     path = "artifacts/metrics/verification_summary.json"
@@ -381,7 +390,7 @@ def get_verification_summary():
         return json.load(f)
 
 
-@app.get("/verification/heavy-events")
+@api_router.get("/verification/heavy-events")
 def get_heavy_events_summary():
     """Retrieve dedicated heavy and very heavy rainfall skill with event counts."""
     path = "artifacts/metrics/heavy_events_summary.json"
@@ -391,7 +400,7 @@ def get_heavy_events_summary():
         return json.load(f)
 
 
-@app.get("/verification/report.pdf")
+@api_router.get("/verification/report.pdf")
 def download_verification_pdf():
     """Download official publication-grade verification report PDF."""
     pdf_path = "artifacts/reports/MonsoonIQ_Official_Verification_Report.pdf"
@@ -404,7 +413,7 @@ def download_verification_pdf():
     )
 
 
-@app.get("/case-replays")
+@api_router.get("/case-replays")
 def get_historical_case_replays():
     """Pre-configured historical extreme events with multi-day time sliders."""
     return {
@@ -441,6 +450,11 @@ def get_historical_case_replays():
             }
         ]
     }
+
+
+# Include API routes at root AND with /api prefix for seamless web UI and external client compatibility
+app.include_router(api_router)
+app.include_router(api_router, prefix="/api")
 
 
 # Mount built frontend static assets if available (enables single-container full-stack deployment)
