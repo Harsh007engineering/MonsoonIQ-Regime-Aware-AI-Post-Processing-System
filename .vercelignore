@@ -6,7 +6,10 @@ data/
 artifacts/
 src/
 tests/
+scripts/
+configs/
 requirements.txt
 Dockerfile
 docker-compose.yml
 railway.json
+Makefile
