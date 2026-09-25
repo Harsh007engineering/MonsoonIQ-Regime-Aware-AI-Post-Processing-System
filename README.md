@@ -5,7 +5,10 @@
 [![React 19](https://img.shields.io/badge/React-19.2-61DAFB.svg)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4-38B2AC.svg)](https://tailwindcss.com/)
 [![Smart India Hackathon](https://img.shields.io/badge/Smart%20India%20Hackathon-SIH%202026-orange.svg)](https://www.sih.gov.in/)
+[![Live Demo](https://img.shields.io/badge/Live%20Deployment-Vercel%20Online-00C853.svg)](https://monsoon-iq-regime-aware-ai.vercel.app/)
 [![Tests](https://img.shields.io/badge/pytest-21%20passed-success.svg)](tests/)
+
+> **🌐 Live Operational Portal (SIH 2026):** **[https://monsoon-iq-regime-aware-ai.vercel.app/](https://monsoon-iq-regime-aware-ai.vercel.app/)**
 
 MonsoonIQ is a meteorologically-grounded, regime-aware AI post-processing system designed to eliminate systematic Numerical Weather Prediction (NWP) forecast errors across India's complex monsoon climatology. By identifying the prevailing synoptic weather regime and routing predictions through a specialized Mixture-of-Experts (MoE) architecture, MonsoonIQ delivers calibrated grid-level (0.25°) and district-level rainfall forecasts, extreme precipitation probabilities, interactive geospatial dashboards, bilingual operational advisories (English & Hindi), and automated verification reporting.
 
