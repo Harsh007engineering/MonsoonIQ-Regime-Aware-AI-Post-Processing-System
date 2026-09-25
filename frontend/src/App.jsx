@@ -12,15 +12,28 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedDate, setSelectedDate] = useState('2023-07-15');
   const [leadTime, setLeadTime] = useState(1);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('monsooniq_theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
   const [dominantRegime, setDominantRegime] = useState('Active Monsoon');
 
-  // Apply dark mode class to html document
+  // Apply dark mode class to html document and persist preference
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('monsooniq_theme', darkMode ? 'dark' : 'light');
+    } catch {
+      // ignore storage errors
     }
   }, [darkMode]);
 
@@ -36,7 +49,7 @@ export default function App() {
   }, [selectedDate]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+    <div className={`${darkMode ? 'dark' : ''} min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200`}>
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
