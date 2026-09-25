@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "installCommand": "cd frontend && npm install",
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    {
+      "source": "/((?!static-data/|assets/|favicon\\.svg|icons\\.svg).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

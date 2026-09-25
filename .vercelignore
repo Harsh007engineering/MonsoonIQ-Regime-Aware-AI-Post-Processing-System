@@ -1,0 +1,12 @@
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+data/
+artifacts/
+src/
+tests/
+requirements.txt
+Dockerfile
+docker-compose.yml
+railway.json

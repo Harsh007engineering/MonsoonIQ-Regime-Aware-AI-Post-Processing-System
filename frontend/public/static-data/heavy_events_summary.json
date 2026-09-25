@@ -1,0 +1,550 @@
+{
+  "heavy_64_5": {
+    "threshold_mm": 64.5,
+    "total_events": 672,
+    "overall_by_system": {
+      "raw_nwp": {
+        "hits": 136,
+        "false_alarms": 16,
+        "misses": 536,
+        "correct_negatives": 26978,
+        "event_count": 672,
+        "pod": 0.2024,
+        "far": 0.1053,
+        "csi": 0.1977,
+        "frequency_bias": 0.226,
+        "ets": 0.1933
+      },
+      "global_qm": {
+        "hits": 321,
+        "false_alarms": 101,
+        "misses": 351,
+        "correct_negatives": 26893,
+        "event_count": 672,
+        "pod": 0.4777,
+        "far": 0.2393,
+        "csi": 0.4153,
+        "frequency_bias": 0.628,
+        "ets": 0.4074
+      },
+      "global_lgb": {
+        "hits": 384,
+        "false_alarms": 12,
+        "misses": 288,
+        "correct_negatives": 26982,
+        "event_count": 672,
+        "pod": 0.5714,
+        "far": 0.0303,
+        "csi": 0.5614,
+        "frequency_bias": 0.589,
+        "ets": 0.5551
+      },
+      "monsooniq": {
+        "hits": 388,
+        "false_alarms": 10,
+        "misses": 284,
+        "correct_negatives": 26984,
+        "event_count": 672,
+        "pod": 0.5774,
+        "far": 0.0251,
+        "csi": 0.5689,
+        "frequency_bias": 0.592,
+        "ets": 0.5627
+      }
+    },
+    "by_regime": {
+      "Active Monsoon": {
+        "event_count": 5,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 5,
+          "correct_negatives": 4129,
+          "event_count": 5,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 5,
+          "correct_negatives": 4129,
+          "event_count": 5,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        }
+      },
+      "Break Monsoon": {
+        "event_count": 0,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 2862,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 2862,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        }
+      },
+      "Monsoon Low/Depression": {
+        "event_count": 149,
+        "raw_nwp": {
+          "hits": 77,
+          "false_alarms": 16,
+          "misses": 72,
+          "correct_negatives": 4075,
+          "event_count": 149,
+          "pod": 0.5168,
+          "far": 0.172,
+          "csi": 0.4667,
+          "frequency_bias": 0.624,
+          "ets": 0.4559
+        },
+        "monsooniq": {
+          "hits": 103,
+          "false_alarms": 7,
+          "misses": 46,
+          "correct_negatives": 4084,
+          "event_count": 149,
+          "pod": 0.6913,
+          "far": 0.0636,
+          "csi": 0.6603,
+          "frequency_bias": 0.738,
+          "ets": 0.6516
+        }
+      },
+      "Orographic": {
+        "event_count": 1,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 1,
+          "correct_negatives": 3232,
+          "event_count": 1,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 1,
+          "correct_negatives": 3232,
+          "event_count": 1,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        }
+      },
+      "Coastal": {
+        "event_count": 5,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 5,
+          "correct_negatives": 3016,
+          "event_count": 5,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 1,
+          "false_alarms": 0,
+          "misses": 4,
+          "correct_negatives": 3016,
+          "event_count": 5,
+          "pod": 0.2,
+          "far": 0.0,
+          "csi": 0.2,
+          "frequency_bias": 0.2,
+          "ets": 0.1997
+        }
+      },
+      "Western Disturbance": {
+        "event_count": 510,
+        "raw_nwp": {
+          "hits": 58,
+          "false_alarms": 0,
+          "misses": 452,
+          "correct_negatives": 5532,
+          "event_count": 510,
+          "pod": 0.1137,
+          "far": 0.0,
+          "csi": 0.1137,
+          "frequency_bias": 0.114,
+          "ets": 0.1051
+        },
+        "monsooniq": {
+          "hits": 284,
+          "false_alarms": 3,
+          "misses": 226,
+          "correct_negatives": 5529,
+          "event_count": 510,
+          "pod": 0.5569,
+          "far": 0.0105,
+          "csi": 0.5536,
+          "frequency_bias": 0.563,
+          "ets": 0.5315
+        }
+      },
+      "Weak/Normal": {
+        "event_count": 2,
+        "raw_nwp": {
+          "hits": 1,
+          "false_alarms": 0,
+          "misses": 1,
+          "correct_negatives": 4132,
+          "event_count": 2,
+          "pod": 0.5,
+          "far": 0.0,
+          "csi": 0.5,
+          "frequency_bias": 0.5,
+          "ets": 0.4999
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 2,
+          "correct_negatives": 4132,
+          "event_count": 2,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        }
+      }
+    },
+    "by_lead_time": {}
+  },
+  "very_heavy_115_6": {
+    "threshold_mm": 115.6,
+    "total_events": 148,
+    "overall_by_system": {
+      "raw_nwp": {
+        "hits": 10,
+        "false_alarms": 7,
+        "misses": 138,
+        "correct_negatives": 27511,
+        "event_count": 148,
+        "pod": 0.0676,
+        "far": 0.4118,
+        "csi": 0.0645,
+        "frequency_bias": 0.115,
+        "ets": 0.064
+      },
+      "global_qm": {
+        "hits": 31,
+        "false_alarms": 20,
+        "misses": 117,
+        "correct_negatives": 27498,
+        "event_count": 148,
+        "pod": 0.2095,
+        "far": 0.3922,
+        "csi": 0.1845,
+        "frequency_bias": 0.345,
+        "ets": 0.1832
+      },
+      "global_lgb": {
+        "hits": 24,
+        "false_alarms": 2,
+        "misses": 124,
+        "correct_negatives": 27516,
+        "event_count": 148,
+        "pod": 0.1622,
+        "far": 0.0769,
+        "csi": 0.16,
+        "frequency_bias": 0.176,
+        "ets": 0.1592
+      },
+      "monsooniq": {
+        "hits": 37,
+        "false_alarms": 7,
+        "misses": 111,
+        "correct_negatives": 27511,
+        "event_count": 148,
+        "pod": 0.25,
+        "far": 0.1591,
+        "csi": 0.2387,
+        "frequency_bias": 0.297,
+        "ets": 0.2376
+      }
+    },
+    "by_regime": {
+      "Active Monsoon": {
+        "event_count": 0,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 4134,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 4134,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        }
+      },
+      "Break Monsoon": {
+        "event_count": 0,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 2862,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 2862,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        }
+      },
+      "Monsoon Low/Depression": {
+        "event_count": 41,
+        "raw_nwp": {
+          "hits": 9,
+          "false_alarms": 7,
+          "misses": 32,
+          "correct_negatives": 4192,
+          "event_count": 41,
+          "pod": 0.2195,
+          "far": 0.4375,
+          "csi": 0.1875,
+          "frequency_bias": 0.39,
+          "ets": 0.1849
+        },
+        "monsooniq": {
+          "hits": 7,
+          "false_alarms": 1,
+          "misses": 34,
+          "correct_negatives": 4198,
+          "event_count": 41,
+          "pod": 0.1707,
+          "far": 0.125,
+          "csi": 0.1667,
+          "frequency_bias": 0.195,
+          "ets": 0.1651
+        }
+      },
+      "Orographic": {
+        "event_count": 0,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 3233,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 3233,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        }
+      },
+      "Coastal": {
+        "event_count": 1,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 1,
+          "correct_negatives": 3020,
+          "event_count": 1,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 1,
+          "correct_negatives": 3020,
+          "event_count": 1,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 0.0,
+          "ets": 0.0
+        }
+      },
+      "Western Disturbance": {
+        "event_count": 106,
+        "raw_nwp": {
+          "hits": 1,
+          "false_alarms": 0,
+          "misses": 105,
+          "correct_negatives": 5936,
+          "event_count": 106,
+          "pod": 0.0094,
+          "far": 0.0,
+          "csi": 0.0094,
+          "frequency_bias": 0.009,
+          "ets": 0.0093
+        },
+        "monsooniq": {
+          "hits": 30,
+          "false_alarms": 6,
+          "misses": 76,
+          "correct_negatives": 5930,
+          "event_count": 106,
+          "pod": 0.283,
+          "far": 0.1667,
+          "csi": 0.2679,
+          "frequency_bias": 0.34,
+          "ets": 0.2637
+        }
+      },
+      "Weak/Normal": {
+        "event_count": 0,
+        "raw_nwp": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 4134,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        },
+        "monsooniq": {
+          "hits": 0,
+          "false_alarms": 0,
+          "misses": 0,
+          "correct_negatives": 4134,
+          "event_count": 0,
+          "pod": 0.0,
+          "far": 0.0,
+          "csi": 0.0,
+          "frequency_bias": 1.0,
+          "ets": 0.0
+        }
+      }
+    },
+    "by_lead_time": {}
+  },
+  "extremely_heavy_204_5": {
+    "threshold_mm": 204.5,
+    "total_events": 5,
+    "overall_by_system": {
+      "raw_nwp": {
+        "hits": 0,
+        "false_alarms": 0,
+        "misses": 5,
+        "correct_negatives": 27661,
+        "event_count": 5,
+        "pod": 0.0,
+        "far": 0.0,
+        "csi": 0.0,
+        "frequency_bias": 0.0,
+        "ets": 0.0
+      },
+      "global_qm": {
+        "hits": 0,
+        "false_alarms": 0,
+        "misses": 5,
+        "correct_negatives": 27661,
+        "event_count": 5,
+        "pod": 0.0,
+        "far": 0.0,
+        "csi": 0.0,
+        "frequency_bias": 0.0,
+        "ets": 0.0
+      },
+      "global_lgb": {
+        "hits": 0,
+        "false_alarms": 0,
+        "misses": 5,
+        "correct_negatives": 27661,
+        "event_count": 5,
+        "pod": 0.0,
+        "far": 0.0,
+        "csi": 0.0,
+        "frequency_bias": 0.0,
+        "ets": 0.0
+      },
+      "monsooniq": {
+        "hits": 0,
+        "false_alarms": 0,
+        "misses": 5,
+        "correct_negatives": 27661,
+        "event_count": 5,
+        "pod": 0.0,
+        "far": 0.0,
+        "csi": 0.0,
+        "frequency_bias": 0.0,
+        "ets": 0.0
+      }
+    },
+    "by_regime": {},
+    "by_lead_time": {}
+  }
+}
